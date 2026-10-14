@@ -1,5 +1,5 @@
 import random
-from google import genai
+import google.generativeai as genai
 from PIL import Image
 import streamlit as st
 
