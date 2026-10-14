@@ -61,7 +61,8 @@ with st.sidebar:
     st.markdown("---")
     st.title("🎨 التأثيرات المتاحة")
     
-    all_effects = ["الصورة الأصلية"] + list(st.session_state.custom_effects.keys())
+    # جعل التأثيرات الافتراضية تبدأ مباشرة بدون خيار "الصورة الأصلية" لكي يتغير الشكل فوراً
+    all_effects = list(st.session_state.custom_effects.keys())
     selected_effect = st.selectbox("اختر التأثير لتطبقه على الصورة:", all_effects)
 
 # ==========================================
@@ -86,8 +87,8 @@ if uploaded_file is not None:
         
         col_ctrl1, col_ctrl2, col_ctrl3 = st.columns(3)
         with col_ctrl1:
-            b_val = st.slider("السطوع (Brightness):", 0.2, 3.0, 1.0, 0.1)
-            c_val = st.slider("التباين (Contrast):", 0.2, 3.0, 1.0, 0.1)
+            b_val = st.slider("السطوع (Brightness):", 0.2, 3.0, 1.2, 0.1)
+            c_val = st.slider("التباين (Contrast):", 0.2, 3.0, 1.2, 0.1)
         with col_ctrl2:
             is_gray = st.checkbox("تحويل لأبيض وأسود")
             is_inv = st.checkbox("عكس الألوان")
@@ -126,9 +127,9 @@ if uploaded_file is not None:
             else:
                 st.warning("يرجى كتابة اسم للتأثير قبل الحفظ.")
 
-    # --- تطبيق التأثير المختار للمستخدم العادي / عند اختيار تأثير جاهز ---
+    # --- تطبيق التأثير المختار من القائمة ---
     else:
-        if selected_effect != "الصورة الأصلية" and selected_effect in st.session_state.custom_effects:
+        if selected_effect in st.session_state.custom_effects:
             eff_data = st.session_state.custom_effects[selected_effect]
             
             if eff_data["grayscale"]:
@@ -136,7 +137,7 @@ if uploaded_file is not None:
             if eff_data["invert"]:
                 if processed_image.mode == 'RGBA':
                     processed_image = processed_image.convert('RGB')
-                processed_image = processed_image.invert(processed_image) if hasattr(ImageOps, 'invert') else ImageOps.invert(processed_image)
+                processed_image = ImageOps.invert(processed_image)
             if eff_data["blur"]:
                 processed_image = processed_image.filter(ImageFilter.BLUR)
 
