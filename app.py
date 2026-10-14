@@ -61,7 +61,6 @@ st.markdown(
 # 2. إعداد الذكاء الاصطناعي مع البحث في الويب
 # ==========================================
 API_KEY = st.secrets.get("GEMINI_API_KEY", "ضع_مفتاح_API_الخاص_بك_هنا")
-genai.configure(api_key=API_KEY)
 
 model = genai.GenerativeModel(
     model_name="gemini-2.5-flash",
