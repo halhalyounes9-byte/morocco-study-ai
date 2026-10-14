@@ -197,6 +197,3 @@ with tab2:
                         bot_reply = response.text
                     except Exception as err:
                         bot_reply = f"عذراً، حدث خطأ في الاتصال: {err}"
-
-                st.markdown(bot_reply)
-                current_messages.append({"role": "assistant", "content": bot_reply})
