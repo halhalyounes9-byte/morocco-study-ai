@@ -62,10 +62,7 @@ st.markdown(
 # ==========================================
 API_KEY = st.secrets.get("GEMINI_API_KEY", "ضع_مفتاح_API_الخاص_بك_هنا")
 
-model = genai.GenerativeModel(
-    model_name="gemini-2.5-flash",
-    tools="google_search",  # للبحث في جميع مواقع الإنترنت
-)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # ==========================================
 # 3. إدارة نظام المحادثات والسجل في الشريط الجانبي
