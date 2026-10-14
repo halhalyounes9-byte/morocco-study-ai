@@ -1,199 +1,158 @@
-import random
-import google.generativeai as genai
-from PIL import Image
 import streamlit as st
+from PIL import Image, ImageOps, ImageEnhance, ImageFilter
 
 # ==========================================
-# 1. إعدادات الصفحة وتصميم الخلفيات العشوائية
+# 1. إعدادات الصفحة وتصميم الخلفية (أسود وبنفسجي فاخر)
 # ==========================================
 st.set_page_config(
-    page_title="المساعد الدراسي الذكي - VIP", page_icon="🎓", layout="wide"
+    page_title="استوديو التأثيرات - VIP",
+    page_icon="🎨",
+    layout="wide"
 )
 
-# قائمة التدرجات اللونية الفخمة لتتغير عشوائياً في كل تحديث
-background_gradients = [
-    "linear-gradient(135deg, #0f172a, #1e293b)",  # أزرق داكن كلاسيكي
-    "linear-gradient(135deg, #18181b, #27272a)",  # رمادي فخم (Zinc)
-    "linear-gradient(135deg, #09090b, #18181b)",  # أسود فحمـي عميق
-    "linear-gradient(135deg, #1e1b4b, #312e81)",  # بنفسجي داكن أنيق
-    "linear-gradient(135deg, #064e3b, #022c22)",  # أخضر زمردي داكن
-    "linear-gradient(135deg, #451a03, #78350f)",  # برونزي دافئ فاخر
-]
-
-# اختيار خلفية عشوائية بشكل ديناميكي
-current_bg = random.choice(background_gradients)
-
-st.markdown(
-    f"""
+st.markdown("""
     <style>
-    .main {{
-        background: {current_bg};
-        color: #f8fafc;
+    .stApp {
+        background: linear-gradient(135deg, #09090b, #1e1b4b, #2e1065);
         background-attachment: fixed;
-    }}
-    .stButton>button {{
-        width: 100%;
-        background-color: #2563eb;
-        color: white;
+        color: #f8fafc;
+    }
+    .founder-badge {
+        background: linear-gradient(135deg, #1e1b4b, #4338ca);
+        border: 1px solid #6366f1;
+        padding: 12px;
         border-radius: 10px;
-        padding: 10px;
-        font-weight: bold;
-    }}
-    .stButton>button:hover {{
-        background-color: #1d4ed8;
-    }}
-    .vip-box {{
-        background: linear-gradient(135deg, #1e293b, #3b82f6);
-        padding: 15px;
-        border-radius: 12px;
         text-align: center;
         color: white;
         font-weight: bold;
-        margin-bottom: 20px;
-        border: 1px solid #60a5fa;
-    }}
+        margin-bottom: 15px;
+    }
+    .stButton>button {
+        border-radius: 8px;
+        background-color: #4f46e5;
+        color: white;
+        font-weight: bold;
+    }
+    .stButton>button:hover {
+        background-color: #4338ca;
+    }
     </style>
-""",
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
 # ==========================================
-# 2. إعداد الذكاء الاصطناعي
+# 2. إدارة حالة التأثيرات المحفوظة (Session State)
 # ==========================================
-API_KEY = st.secrets.get("GEMINI_API_KEY")
-
-if API_KEY:
-    genai.configure(api_key=API_KEY)
-
-model = genai.GenerativeModel("gemini-1.5-flash")
+if "custom_effects" not in st.session_state:
+    st.session_state.custom_effects = {
+        "أبيض وأسود عتيق": {"brightness": 1.0, "contrast": 1.0, "grayscale": True, "invert": False, "blur": False},
+        "عكس الألوان": {"brightness": 1.0, "contrast": 1.0, "grayscale": False, "invert": True, "blur": False},
+        "إضاءة عالية VIP": {"brightness": 1.8, "contrast": 1.3, "grayscale": False, "invert": False, "blur": False},
+        "تأثير سينمائي داكن": {"brightness": 0.7, "contrast": 1.6, "grayscale": False, "invert": False, "blur": False},
+    }
 
 # ==========================================
-# 3. إدارة نظام المحادثات والسجل في الشريط الجانبي
+# 3. الشريط الجانبي: لوحة المؤسس واختيار الفلاتر
 # ==========================================
-if "chats" not in st.session_state:
-    st.session_state.chats = {"محادثة 1": []}
-
-if "current_chat" not in st.session_state:
-    st.session_state.current_chat = "محادثة 1"
-
 with st.sidebar:
-    st.markdown(
-        """
-        <div class="vip-box">
-            ✨ رصيد السوبر شات: غير محدود (VIP)<br>
-            <span style="font-size: 12px; color: #e2e8f0;">نسخة يونس الخاصة 🚀</span>
-        </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    st.title("📂 سجل المحادثات")
-
-    if st.button("➕ محادثة جديدة"):
-        new_name = f"محادثة {len(st.session_state.chats) + 1}"
-        st.session_state.chats[new_name] = []
-        st.session_state.current_chat = new_name
-        st.rerun()
-
+    st.markdown('<div class="founder-badge">👑 لوحة التحكم الخاصة بالمؤسس<br><span style="font-size:11px; color:#cbd5e1;">Developer: يونس 🚀</span></div>', unsafe_allow_html=True)
+    
+    founder_mode = st.checkbox("⚙️ تفعيل وضع المؤسس (إضافة وتعديل التأثيرات)", value=False)
+    
     st.markdown("---")
-    st.write("💬 **اختر محادثة سابقة:**")
-
-    chat_names = list(st.session_state.chats.keys())
-    selected_chat = st.radio(
-        "المحادثات:",
-        chat_names,
-        index=chat_names.index(st.session_state.current_chat),
-        label_visibility="collapsed",
-    )
-
-    if selected_chat != st.session_state.current_chat:
-        st.session_state.current_chat = selected_chat
-        st.rerun()
-
-    st.markdown("---")
-    st.subheader("⚙️ إعدادات الذكاء")
-    super_mode = st.checkbox(
-        "⚡ تفعيل وضع السوبر شات الخارق (Deep Think)", value=True
-    )
-    st.caption("برمجة وتطوير: يونس 🚀")
+    st.title("🎨 التأثيرات المتاحة")
+    
+    all_effects = ["الصورة الأصلية"] + list(st.session_state.custom_effects.keys())
+    selected_effect = st.selectbox("اختر التأثير لتطبقه على الصورة:", all_effects)
 
 # ==========================================
-# 4. واجهة التطبيق الرئيسية
+# 4. الواجهة الرئيسية
 # ==========================================
-st.title("🎓 المساعد الدراسي المغربي الذكي (سوبر شات)")
+st.markdown("""
+    <div style="background: rgba(30, 27, 75, 0.6); padding: 20px; border-radius: 14px; text-align: center; color: white; margin-bottom: 20px; border: 1px solid #4338ca;">
+        <h2 style="margin: 0;">🎨 استوديو تأثيرات الصور الفاخر</h2>
+        <p style="margin: 5px 0 0 0; color: #cbd5e1; font-size: 13px;">ارفع صورتك وطبق عليها أقوى الفلاتر والتأثيرات فوراً</p>
+    </div>
+""", unsafe_allow_html=True)
 
-tab1, tab2 = st.tabs(["📸 حل التمارين بالصور", "💬 السوبر شات والبحث الشامل"])
+uploaded_file = st.file_uploader("ارفع الصورة هنا للبدء بالتعديل:", type=["jpg", "jpeg", "png"])
 
-# --- التبويب الأول: تحليل الصور ---
-with tab1:
-    st.subheader("📸 رفع صورة التمرين للحل الفوري")
-    uploaded_file = st.file_uploader(
-        "اختر صورة التمرين:", type=["jpg", "png", "jpeg"]
-    )
+if uploaded_file is not None:
+    original_image = Image.open(uploaded_file)
+    processed_image = original_image.copy()
 
-    if uploaded_file is not None:
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            image = Image.open(uploaded_file)
-            st.image(image, caption="الصورة المرفوعة", use_column_width=True)
-        with col2:
-            if st.button("🚀 استخراج الحل الشامل (سوبر)"):
-                with st.spinner("جاري قراءة التمرين وتحليله بعمق..."):
-                    try:
-                        prompt = (
-                            "أنت أستاذ ومساعد دراسي خبير جداً بالمناهج المغربية. "
-                            "حلل التمرين الموجود في الصورة واكتب الحل بالتفصيل خطوة بخطوة مع التعليل والقوانين المستخدمة."
-                        )
-                        response = model.generate_content([prompt, image])
-                        st.success("تم الحل بنجاح!")
-                        st.markdown(response.text)
-                    except Exception as e:
-                        st.error(f"حدث خطأ أثناء تحليل الصورة: {e}")
+    # --- لوحة التحكم الخاصة بالمؤسس عند التفعيل ---
+    if founder_mode:
+        st.info("🛠️ **وضع المؤسس مفعل:** يمكنك تعديل زوايا الإضاءة والتباين وحفظ هذا التأثير تلقائياً في القائمة!")
+        
+        col_ctrl1, col_ctrl2, col_ctrl3 = st.columns(3)
+        with col_ctrl1:
+            b_val = st.slider("السطوع (Brightness):", 0.2, 3.0, 1.0, 0.1)
+            c_val = st.slider("التباين (Contrast):", 0.2, 3.0, 1.0, 0.1)
+        with col_ctrl2:
+            is_gray = st.checkbox("تحويل لأبيض وأسود")
+            is_inv = st.checkbox("عكس الألوان")
+        with col_ctrl3:
+            is_blur = st.checkbox("تأثير الضبابية (Blur)")
+            new_effect_name = st.text_input("اسم التأثير الجديد لتخزينه:", placeholder="مثلاً: فلتر يونس الفخم")
 
-# --- التبويب الثاني: السوبر شات المفتوح ---
-with tab2:
-    st.subheader(f"⚡ نافذة السوبر شات: {st.session_state.current_chat}")
-    if super_mode:
-        st.info(
-            "💡 **وضع السوبر شات الخارق مفعل:** سيقدم الذكاء الاصطناعي إجابات تحليلية دقيقة ومتقدمة لمساعدتك الدراسية."
-        )
+        # تطبيق الإعدادات المباشرة للمؤسس
+        if is_gray:
+            processed_image = ImageOps.grayscale(processed_image)
+        if is_inv:
+            if processed_image.mode == 'RGBA':
+                processed_image = processed_image.convert('RGB')
+            processed_image = ImageOps.invert(processed_image)
+        if is_blur:
+            processed_image = processed_image.filter(ImageFilter.BLUR)
 
-    current_messages = st.session_state.chats[st.session_state.current_chat]
+        # تعديل السطوع والتباين
+        enhancer_b = ImageEnhance.Brightness(processed_image)
+        processed_image = enhancer_b.enhance(b_val)
+        enhancer_c = ImageEnhance.Contrast(processed_image)
+        processed_image = enhancer_c.enhance(c_val)
 
-    # عرض الرسائل السابقة
-    for message in current_messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+        # زر حفظ التأثير المخصص تلقائياً في القائمة
+        if st.button("💾 حفظ التأثير وإضافته تلقائياً للقائمة"):
+            if new_effect_name.strip():
+                st.session_state.custom_effects[new_effect_name] = {
+                    "brightness": b_val,
+                    "contrast": c_val,
+                    "grayscale": is_gray,
+                    "invert": is_inv,
+                    "blur": is_blur
+                }
+                st.success(f"تم حفظ التأثير '{new_effect_name}' وإضافته لقائمة التأثيرات بنجاح! 🚀")
+                st.rerun()
+            else:
+                st.warning("يرجى كتابة اسم للتأثير قبل الحفظ.")
 
-    # خانة الكتابة للسوبر شات
-    if user_query := st.chat_input(
-        "اكتب سؤالك أو اطلب بحثاً شاملاً (سوبر شات)..."
-    ):
-        current_messages.append({"role": "user", "content": user_query})
-        with st.chat_message("user"):
-            st.markdown(user_query)
+    # --- تطبيق التأثير المختار للمستخدم العادي / عند اختيار تأثير جاهز ---
+    else:
+        if selected_effect != "الصورة الأصلية" and selected_effect in st.session_state.custom_effects:
+            eff_data = st.session_state.custom_effects[selected_effect]
+            
+            if eff_data["grayscale"]:
+                processed_image = ImageOps.grayscale(processed_image)
+            if eff_data["invert"]:
+                if processed_image.mode == 'RGBA':
+                    processed_image = processed_image.convert('RGB')
+                processed_image = processed_image.invert(processed_image) if hasattr(ImageOps, 'invert') else ImageOps.invert(processed_image)
+            if eff_data["blur"]:
+                processed_image = processed_image.filter(ImageFilter.BLUR)
 
-        with st.chat_message("assistant"):
-            with st.spinner("⚡ جاري التفكير وتحضير الإجابة بدقة..."):
-                try:
-                    system_prefix = (
-                        "أنت مساعد أكاديمي خبير ومستشار دراسي متقدم في المناهج المغربية. أجب بدقة وعمق: "
-                        if super_mode
-                        else ""
-                    )
-                    full_prompt = system_prefix + user_query
+            enhancer_b = ImageEnhance.Brightness(processed_image)
+            processed_image = enhancer_b.enhance(eff_data["brightness"])
+            enhancer_c = ImageEnhance.Contrast(processed_image)
+            processed_image = enhancer_c.enhance(eff_data["contrast"])
 
-                    formatted_history = []
-                    for m in current_messages[:-1]:
-                        role = "user" if m["role"] == "user" else "model"
-                        formatted_history.append({"role": role, "parts": [m["content"]]})
+    # --- عرض المقارنة (قبل وبعد) ---
+    col_img1, col_img2 = st.columns(2)
+    with col_img1:
+        st.subheader("📷 الصورة الأصلية")
+        st.image(original_image, use_column_width=True)
+    with col_img2:
+        st.subheader(f"✨ النتيجة: ({selected_effect if not founder_mode else 'معاينة وضع المؤسس'})")
+        st.image(processed_image, use_column_width=True)
 
-                    chat_session = model.start_chat(history=formatted_history)
-                    response = chat_session.send_message(full_prompt)
-                    bot_reply = response.text
-                except Exception as e:
-                    try:
-                        response = model.generate_content(user_query)
-                        bot_reply = response.text
-                    except Exception as err:
-                        bot_reply = f"عذراً، حدث خطأ في الاتصال: {err}"
+else:
+    st.info("💡 ارفع أي صورة لتبدأ باستخدام التعديلات وتجربة وضع المؤسس!")
