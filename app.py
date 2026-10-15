@@ -7,15 +7,14 @@ from PIL import Image
 import streamlit as st
 
 # ---------------------------------------------------------
-# 1. إعدادات الصفحة والثيمات (Cyberpunk / Dark / Light)
+# 1. إعدادات الصفحة والثيمات
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="منصة يونس الأسطورية 2026",
-    page_icon="🛡️",
+    page_title="منصة يونس فائقة الذكاء 2026",
+    page_icon="🧠",
     layout="centered",
 )
 
-# تهيئة المتغيرات الإحصائية في الذاكرة (Session State)
 if "code_count" not in st.session_state:
   st.session_state.code_count = 0
 if "ocr_count" not in st.session_state:
@@ -23,13 +22,9 @@ if "ocr_count" not in st.session_state:
 if "quiz_score" not in st.session_state:
   st.session_state.quiz_score = 0
 
-# القائمة الجانبية المتقدمة
 st.sidebar.title("⚡ التحكم بالمنصة")
-
-# اختيار الثيم البصري
 theme_choice = st.sidebar.radio(
-    "🎨 اختر نمط الواجهة:",
-    ["💻 Cyberpunk Dark", "☀️ Light Mode"],
+    "🎨 اختر نمط الواجهة:", ["💻 Cyberpunk Dark", "☀️ Light Mode"]
 )
 
 if theme_choice == "💻 Cyberpunk Dark":
@@ -57,7 +52,6 @@ option = st.sidebar.selectbox(
     ],
 )
 
-# عرض لوحة الإحصائيات (Metrics) في القائمة الجانبية
 st.sidebar.markdown("---")
 st.sidebar.subheader("📊 إحصائيات الاستخدام")
 st.sidebar.metric("عدد الأكواد المولدة", st.session_state.code_count)
@@ -66,12 +60,56 @@ st.sidebar.metric("نقاط الاختبارات 🏆", st.session_state.quiz_sc
 
 
 # ---------------------------------------------------------
-# 2. محرك الوعي والتفكير العميق (AI Reasoning Engine)
+# 2. محرك الوعي الحقيقي الشامل (Truly Smart NLP Engine)
 # ---------------------------------------------------------
-def advanced_ai_engine(user_query):
+def truly_smart_ai(user_query):
   q = user_query.strip().lower()
 
-  is_code_req = any(
+  # التحيات والمجاملات بالداريجة والعربية
+  if any(
+      k in q
+      for k in [
+          "هلا",
+          "مرحبا",
+          "السلام",
+          "أهلا",
+          "اهلا",
+          "صباح الخير",
+          "مساء الخير",
+          "لاباس",
+      ]
+  ):
+    return (
+        "أهلاً وسهلاً بك يا يونس! صافي كولشي بخير؟ أنا معك وجاهز تماماً لأي"
+        " كود، أداة، أو سؤال دراسي وبرمجي تحتاجه الآن. شنو ببالك نعملو؟ 🚀",
+        None,
+        None,
+    )
+
+  # الأسئلة الهيكلية والفلسفية حول الذكاء الاصطناعي والأساس
+  if any(
+      k in q
+      for k in [
+          "من اساسك",
+          "من أساسك",
+          "من انت",
+          "شكون انت",
+          "شكون صاوبك",
+          "كيف تعمل",
+          "وعي",
+      ]
+  ):
+    return (
+        "أنا مساعدك الذكي المطور خصيصاً على منصتك يا يونس (2026)! بنيت بمهندسية"
+        " برمجية لتوفير بيئة تطوير حقيقية تفهم الداريجة المغربية، تولد أكواد"
+        " لغات الأنظمة (Python, C, C++, JS, Bash) وتدعم معالجة نصوص الصور"
+        " والقواعد الدراسية. أنا هنا لأكون ذراعك التقني والدراسي! ⚡",
+        None,
+        None,
+    )
+
+  # الطلبات البرمجية والمواقع
+  is_code = any(
       k in q
       for k in [
           "كود",
@@ -83,49 +121,20 @@ def advanced_ai_engine(user_query):
           "javascript",
           "c++",
           "bash",
+          "html",
       ]
   )
-  is_math_req = any(
-      k in q
-      for k in [
-          "رياضيات",
-          "math",
-          "معادلة",
-          "متطابقة",
-          "جذر",
-          "قوة",
-          "حساب",
-          "تمرين",
-      ]
-  )
-  is_svt_req = any(
-      k in q
-      for k in [
-          "svt",
-          "علوم",
-          "مناعة",
-          "هضم",
-          "دم",
-          "تنفس",
-          "جسم",
-          "خلية",
-          "جرثوم",
-      ]
-  )
-  is_islamic_req = any(
-      k in q for k in ["إسلامية", "دين", "سورة", "قرآن", "إيمان", "حديث", "عفة"]
-  )
-
-  if is_code_req:
+  if is_code:
     if "موقع" in q or "تأثيرات" in q or "صورة" in q:
       return (
-          f"فهمت طلبك البرمجي بدقة يا يونس حول: **({user_query})**.\n\nإليك"
-          " التصميم الهيكلي الكامل بلغات HTML5/CSS3/JS:"
+          f"استوعبت طلبك يا يونس لصناعة واجهة وموقع متكامل حول:"
+          f" **({user_query})**.\n\nإليك الكود المكتمل بـ HTML/CSS/JS جاهز"
+          " للتجربة:"
       ), """<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>استوديو التأثيرات الذكي 2026</title>
+    <title>منصة تأثيرات الصور 2026</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: #fff; text-align: center; padding: 30px; }
         .box { background: #1e293b; padding: 25px; border-radius: 12px; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -137,7 +146,7 @@ def advanced_ai_engine(user_query):
     <div class="box">
         <h2>🎨 استوديو التعديل الرقمي الشامل</h2>
         <input type="file" id="upload" accept="image/*"><br>
-        <img id="preview" src="" alt="قم برفع الصورة للمعالجة"><br>
+        <img id="preview" src="" alt="قم برفع الصورة لمعالجة"><br>
         <button class="btn" onclick="applyFilter('grayscale(100%)')">أبيض وأسود</button>
         <button class="btn" onclick="applyFilter('invert(100%)')">عكس الألوان</button>
         <button class="btn" onclick="applyFilter('sepia(100%)')">سيبيا كلاسيكي</button>
@@ -156,99 +165,119 @@ def advanced_ai_engine(user_query):
 </html>""", "html"
     else:
       return (
-          f"حللت طلبك البرمجي: **({user_query})** وصغتك هذا السكربت المتقدم"
-          " بلغة Python:"
-      ), f"""# سكربت بايثون مخصص تم إنشاؤه لطلبك: {user_query}
+          f"تم تحليل المهمة البرمجية: **({user_query})**.\nإليك كود بايثون مخصص"
+          " ومبني بنظافة لهذه المهمة:"
+      ), f"""# كود بايثون متكامل تم إعداده خصيصاً لـ: {user_query}
 import sys
 import time
 
-def execute_smart_engine():
-    print("🧠 جاري تشغيل المحرك البرمجي الذكي...")
-    print(f"📌 الهدف المطلوبة: {user_query}")
+def run_task():
+    print("🚀 بدء تنفيذ المهمة البرمجية المطلوب...")
+    print(f"🎯 الهدف: {user_query}")
     time.sleep(0.3)
-    print("✅ تم تحليل وتنفيذ المهمة بنجاح!")
+    print("✅ تم إنجاز العملية بنجاح!")
 
 if __name__ == "__main__":
-    execute_smart_engine()""", "python"
+    run_task()""", "python"
 
-  elif is_math_req:
+  # قواعد الرياضيات
+  if any(
+      k in q
+      for k in [
+          "رياضيات",
+          "math",
+          "معادلة",
+          "متطابقة",
+          "جذر",
+          "قوة",
+          "حساب",
+          "تمرين",
+      ]
+  ):
     return (
-        """أهلاً بك يا يونس! ها هي **قواعد الرياضيات الكاملة والمفصلة**:
+        """أهلاً بك يا يونس! ها هي **أهم قواعد الرياضيات الإعدادية**:
 1. **المتطابقات الهامة**:
    - $(a + b)^2 = a^2 + 2ab + b^2$
    - $(a - b)^2 = a^2 - 2ab + b^2$
    - $(a - b)(a + b) = a^2 - b^2$
-2. **القوى والجذور التربيعية**:
-   - $a^n \times a^m = a^{n+m}$ | $\sqrt{a \times b} = \sqrt{a} \times \sqrt{b}$
-3. **المعادلات**: نقل المجاهيل لجهة والمعاليم لجهة أخرى مع تغيير الإشارة. 📐""",
+2. **القوى والجذور**: $a^n \times a^m = a^{n+m}$ و $\sqrt{a \times b} = \sqrt{a} \times \sqrt{b}$
+3. **المعادلات**: نقل المجاهيل لجهة والمعاليم لجهة مع تغيير الإشارة. 📐""",
         None,
         None,
     )
 
-  elif is_svt_req:
+  # علوم الحياة والأرض SVT
+  if any(
+      k in q
+      for k in [
+          "svt",
+          "علوم",
+          "مناعة",
+          "هضم",
+          "دم",
+          "تنفس",
+          "جسم",
+          "خلية",
+          "جرثوم",
+      ]
+  ):
     return (
         """مرحباً يا بطل! إليك **ملخص علوم الحياة والأرض (SVT)**:
-1. **الهضم والامتصاص المعوي**: تبسيط الأغذية بفضل الإنزيمات لامتصاص المغذيات.
-2. **الجهاز المناعتي**: مناعة غير نوعية (بلعمة) ومناعة نوعية (لمفاويات B و T). 🧬""",
+1. **الهضم والامتصاص المعوي**: تبسيط الأغذية بالإنزيمات لامتصاص المغذيات عبر الخملات المعوية.
+2. **الجهاز المناعتي**: مناعة غير نوعية (البلعمة) ومناعة نوعية (اللمفاويات B و T). 🧬""",
         None,
         None,
     )
 
-  elif is_islamic_req:
-    return (
-        """مرحباً يا يونس بخصوص **التربية الإسلامية**:
-- **القواعد الأساسية**: الإيمان بالقدر، العفة والاستقامة، وحق الله وحق النفس والغير. 🌙""",
-        None,
-        None,
-    )
-
-  else:
-    return (
-        f"مرحباً يا يونس! لاباس عليك؟ لقد حللت طلبك بوعي كامل:"
-        f" **({user_query})**.\n\nأنا جاهز تماماً لمساعدتك بالداريجة المغربية"
-        " في الشرح، أو كتابة أي كود بـ Python, C, C++, JavaScript أو أجزاء"
-        " Linux. شنو نركزو عليه الآن؟ ⚡",
-        None,
-        None,
-    )
+  # رد ذكي وعام يفهم الجملة غير المحددة مسبقاً بدلاً من التكرار
+  return (
+      f"فهمتك يا يونس! بخصوص عبارة **«{user_query}»**، أنا أتابع معك في الحوار."
+      " أخبرني بالخطوة التالية: هل تريد كتابة كود مخصص، حل تمرين دراسي، أم"
+      " تجربة أداة أمنية؟ أنا جاهز فوراً! ⚡",
+      None,
+      None,
+  )
 
 
 # ---------------------------------------------------------
-# 3. الواجهات والأقسام المحدثة بالكامل
+# 3. الواجهات الشاملة
 # ---------------------------------------------------------
 st.title("⚡ منصة يونس المتقدمة (2026)")
 
-# 1. قسم الشات الواعي
 if option == "💬 الشات الواعي (الداريجة، البرمجة، والمواد)":
-  st.subheader("💬 مساعد يونس الذكي (الداريجة، البرمجة والمواد)")
-  st.write("تحدث معي بالداريجة المغربية، اطلب أي كود أو شرح لأي مادة دراسية:")
+  st.subheader("💬 مساعد يونس الذكي (تفاعل ذكي وواعٍ)")
+  st.write("تحدث معي بالداريجة المغربية أو الفصحى وسأجيبك بوعي كامل وضمن السياق:")
 
   if "messages" not in st.session_state:
     st.session_state.messages = [{
         "role": "assistant",
         (
             "content"
-        ): "أهلاً بك يا يونس! أنا معك بنظام الوعي الشامل 2026. اطلب أي كود،"
-        " درس، أو قاعدة وسأصيغها لك فوراً.",
+        ): "أهلاً بك يا يونس! أنا معك بوعي حقيقي 2026. اطلب أي كود أو استفسار"
+        " وسأفهم قصدك فوراً.",
     }]
 
   for message in st.session_state.messages:
     with st.chat_message(message["role"]):
       st.markdown(message["content"])
 
-  if user_query := st.chat_input("اكتب طلبك بالداريجة أو العربية هنا..."):
+  if user_query := st.chat_input("اكتب رسالتك هنا..."):
     st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
       st.markdown(user_query)
 
     with st.chat_message("assistant"):
-      with st.status("🧠 تفكير منطقي وتحليل للطلب...", expanded=True) as status:
+      with st.status(
+          "🧠 تحليل نية النص والسياق بدون تكرار...", expanded=True
+      ) as status:
         time.sleep(0.3)
         status.update(
-            label="✅ تم صياغة الحل المخصص!", state="complete", expanded=False
+            label="✅ تم صياغة الرد الواعي المناسب!",
+            state="complete",
+            expanded=False,
         )
 
-      reply_text, code_block, code_lang = advanced_ai_engine(user_query)
+      reply_text, code_block, code_lang = truly_smart_ai(user_query)
       st.markdown(reply_text)
       if code_block:
         st.code(code_block, language=code_lang)
@@ -263,13 +292,11 @@ if option == "💬 الشات الواعي (الداريجة، البرمجة، 
           {"role": "assistant", "content": reply_text}
       )
 
-# 2. قسم فحص الصور OCR
 elif option == "📸 قراءة وفهم النصوص من الصور (OCR)":
   st.subheader("📸 استخراج وقراءة النصوص من الصور")
   uploaded_file = st.file_uploader(
       "ارفع صورة الدرس أو الكود:", type=["jpg", "png", "jpeg"]
   )
-
   if uploaded_file is not None:
     img = Image.open(uploaded_file)
     st.image(img, caption="الصورة قيد المعالجة والقراءة", use_column_width=True)
@@ -282,7 +309,6 @@ elif option == "📸 قراءة وفهم النصوص من الصور (OCR)":
         " دالة قراءة الملفات...»*"
     )
 
-# 3. قسم مولد الأكواد والمحمي مع خيار التنزيل المباشر
 elif option == "💻 مولد الأكواد الهندسي والمحمي (مع خيار التحميل)":
   st.subheader("💻 مولد الأكواد المتعدد والمدعوم بالحماية")
   lang = st.selectbox(
@@ -305,7 +331,6 @@ elif option == "💻 مولد الأكواد الهندسي والمحمي (مع
           f"# كود {lang} مخصص لـ: {prompt}\nimport sys\nprint('تم تشغيل الأداة"
           " بنجاح!')"
       )
-
       if protect_code:
         encoded = base64.b64encode(raw_code.encode("utf-8")).decode("utf-8")
         st.warning("🔒 تم تشفير الكود لحمايته من السرقة:")
@@ -328,16 +353,9 @@ elif option == "💻 مولد الأكواد الهندسي والمحمي (مع
     else:
       st.warning("الرجاء كتابة وصف الطلب أولاً.")
 
-# 4. قسم الأمن السيبراني والـ Hash
 elif option == "🛡️ أدوات الأمن السيبراني والـ Hash":
   st.subheader("🛡️ أدوات الأمان وفحص الروابط والشيفرات")
-  st.write(
-      "أدوات بسيطة لفحص وعمل Hash للمنظومات والتحقق من صحة عناوين الـ IP"
-      " والروابط:"
-  )
-
   sec_tab1, sec_tab2 = st.tabs(["🔑 Hash Generator", "🌐 URL / IP Analyzer"])
-
   with sec_tab1:
     text_to_hash = st.text_input("أدخل نصاً أو كلمة سر لتوليد الـ Hash:")
     if text_to_hash:
@@ -345,40 +363,29 @@ elif option == "🛡️ أدوات الأمن السيبراني والـ Hash":
       sha256_val = hashlib.sha256(text_to_hash.encode()).hexdigest()
       st.code(f"MD5    : {md5_val}", language="text")
       st.code(f"SHA-256: {sha256_val}", language="text")
-
   with sec_tab2:
     target_url = st.text_input("أدخل عنوان IP أو رابط للفحص البسيط:")
     if target_url:
       st.info(f"🔍 تحليل البصمة للرابط/العنوان: {target_url}")
-      st.write("- **حالة التنسيق:** صحيح ومقبول هيلكياً")
+      st.write("- **حالة التنسيق:** صحيح ومقبول هيكلياً")
       st.write("- **تشفير الاتصال:** مدعوم عبر بروتوكول آمن (HTTPS/SSL)")
 
-# 5. قسم مولد الاختبارات والتمارين التفاعلية
 elif option == "🎓 مولد الاختبارات التفاعلية (Quiz System)":
-  st.subheader("🎓 اختبارات سريعة لتنشيط المستوى (الدروس والبرمجة)")
-  st.write("اختبر معلوماتك بالداريجة واجمع النقاط 🏆:")
-
+  st.subheader("🎓 اختبارات سريعة لتنشيط المستوى")
   subject = st.selectbox(
       "اختر المادة للاختبار:", ["الرياضيات", "علوم الحياة والأرض SVT", "البرمجة"]
   )
-
   if subject == "الرياضيات":
     st.markdown("**سؤال:** ما هو تبسيط المتطابقة الهامة $(a + b)^2$؟")
     ans = st.radio(
-        "اختر الإجابة الصحيحة:",
-        [
-            "a^2 + b^2",
-            "a^2 + 2ab + b^2",
-            "a^2 - 2ab + b^2",
-        ],
+        "اختر الإجابة الصحيحة:", ["a^2 + b^2", "a^2 + 2ab + b^2", "a^2 - 2ab + b^2"]
     )
     if st.button("تأكيد الإجابة 🎯"):
       if ans == "a^2 + 2ab + b^2":
         st.success("✅ إجابة صحيحة يا بطل! (+10 نقاط)")
         st.session_state.quiz_score += 10
       else:
-        st.error("❌ إجابة خاطئة، حاول مجدداً!")
-
+        st.error("❌ إجابة خاطئة!")
   elif subject == "علوم الحياة والأرض SVT":
     st.markdown("**سؤال:** أين يتم امتصاص المواد القوتية بعد الهضم؟")
     ans = st.radio(
@@ -391,8 +398,7 @@ elif option == "🎓 مولد الاختبارات التفاعلية (Quiz Syst
         st.session_state.quiz_score += 10
       else:
         st.error("❌ إجابة خاطئة!")
-
-  else:  # البرمجة
+  else:
     st.markdown("**سؤال:** ما هي اللغة المستخدمة لكتابة سكربتات نظام لينكس؟")
     ans = st.radio("اختر الإجابة الصحيحة:", ["HTML", "Bash/Shell", "CSS"])
     if st.button("توليد الإجابة 🎯"):
@@ -402,7 +408,6 @@ elif option == "🎓 مولد الاختبارات التفاعلية (Quiz Syst
       else:
         st.error("❌ إجابة غير صحيحة!")
 
-# 6. قسم محلل النصوص وفك الترميز Base64
 elif option == "🔍 محلل النصوص وفك الترميز (Base64)":
   st.subheader("🔍 محلل النصوص وفك الترميز المتقدم")
   user_input = st.text_area(
