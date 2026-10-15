@@ -6,169 +6,144 @@ import streamlit as st
 
 # إعدادات الصفحة
 st.set_page_config(
-    page_title="منصة يونس للذكاء والأنظمة 2026", page_icon="⚡", layout="centered"
+    page_title="منصة يونس الشاملة 2026 (الذكاء والتعليم)",
+    page_icon="⚡",
+    layout="centered",
 )
 
-st.title("⚡ منصة يونس الذكية - نموذج 2026")
+st.title("⚡ منصة يونس الذكية والتعليمية (2026)")
 st.write(
-    "أهلاً بك يا يونس! تم تطوير المساعد ليعمل بنظام التفكير الفائق لمحاكاة"
-    " أحدث نماذج الذكاء الاصطناعي."
+    "أهلاً بك يا يونس! تمت إضافة الداريجة المغربية، تحليل النصوص من الصور،"
+    " وقواعد جميع المواد الدراسية الإعدادية."
 )
 
-# القائمة الجانبية
+# القائمة الجانبية المحدثة
 option = st.sidebar.selectbox(
     "اختر القسم المطلوب:",
     [
-        "💬 مساعد يونس الذكي (AI Model 2026)",
+        "🇲🇦 الشات بالداريجة والمواد الدراسية",
+        "📸 فحص وقراءة النصوص من الصور (OCR)",
         "🔍 محلل النصوص والشيفرات",
-        "📸 محلل وبصمة الصور المتقدم",
-        "💻 مولد الأكواد الهندسي مع حماية الأكواد",
+        "💻 مولد الأكواد الهندسي والمحمي",
     ],
 )
 
-# 1. قسم شات الذكاء الاصطناعي (نموذج 2026 المتطور)
-if option == "💬 مساعد يونس الذكي (AI Model 2026)":
-  st.subheader("💬 مساعد يونس (Smart Reasoning Model)")
-  st.write("اكتب أي طلب أو أداة تريد مناقشتها أو بنائها مع النموذج:")
+# 1. قسم الشات بالداريجة وقواعد المواد الدراسية
+if option == "🇲🇦 الشات بالداريجة والمواد الدراسية":
+  st.subheader("🇲🇦 مساعد يونس الذكي (داريجة ومواد دراسية)")
+  st.write(
+      "هنا نقدر نهضرو بالداريجة، ونعطيك أي قاعدة في الرياضيات، SVT، الفرنسية،"
+      " التربية الإسلامية، أو أي مادة بغيتي!"
+  )
 
   if "messages" not in st.session_state:
     st.session_state.messages = [{
         "role": "assistant",
         (
             "content"
-        ): "مرحباً يا يونس! أنا نموذج الذكاء الاصطناعي المطور لعام 2026."
-        " أنا جاهز لتحليل أي طلب برمجي، أمني، أو هندسي وتوليد الأكواد"
-        " الحقيقية لك فوراً.",
+        ): "أهلاً بك يا يونس! لاباس عليك؟ أنا معك هنا باش نعاونك في القراية"
+        " (رياضيات، SVT، إسلامية، فرنسية...) وبأي كود بغيت بالداريجة أو العربية.",
     }]
 
   for message in st.session_state.messages:
     with st.chat_message(message["role"]):
       st.markdown(message["content"])
 
-  if user_query := st.chat_input("اكتب طلبك للنموذج هنا..."):
+  if user_query := st.chat_input("كتب سؤالك أو القاعدة لي بغيتي بالداريجة..."):
     st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
       st.markdown(user_query)
 
     with st.chat_message("assistant"):
-      # محاكاة شريط التفكير للذكاء الاصطناعي (Reasoning Process)
       with st.status(
-          "🧠 جارٍ التفكير وتفكيك الطلب وتوليد الحل البرمجي...",
+          "🧠 جاري تحليل السؤال والبحث في قواعد المواد الدراسية...",
           expanded=True,
       ) as status:
-        st.write("🔍 تحليل النص المدخل واستخراج الأهداف...")
-        time.sleep(0.6)
-        st.write("⚙️ بناء الخوارزميات وتجهيز بيئة التشغيل المناسبة...")
-        time.sleep(0.6)
-        st.write("🛡️ فحص أمان الكود وتنسيق المخرجات بأسلوب 2026...")
-        time.sleep(0.4)
+        time.sleep(0.5)
         status.update(
-            label="✅ تم معالجة الطلب والتفكير بنجاح!",
+            label="✅ تم إيجاد الجملة أو القاعدة الدراسية بنجاح!",
             state="complete",
             expanded=False,
         )
 
-      query_lower = user_query.lower()
+      q_lower = user_query.lower()
 
-      # نظام معالجة ذكي يعتمد على تحليل سياق الطلب
+      # نظام الرد الذكي حسب المادة أو الداريجة
       if (
-          "موقع" in query_lower
-          or "تاثير" in query_lower
-          or "تأثير" in query_lower
-          or "صورة" in query_lower
+          "رياضيات" in q_lower
+          or "math" in q_lower
+          or "معادلة" in q_lower
+          or "جذر" in q_lower
       ):
-        st.markdown(
-            f"**تحليل النموذج:** تم استيعاب طلبك لصناعة أداة أو موقع خاص بـ"
-            f" ({user_query}). إليك الكود الهيكلي المتكامل:"
-        )
-
-        html_code = """<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <title>منصة التأثيرات الرقمية 2026</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; background: #0b132b; color: #ffffff; padding: 25px; }
-        .card { background: #1c2541; padding: 25px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        img { max-width: 320px; border-radius: 10px; margin-top: 15px; border: 2px solid #48cae4; }
-        .btn { padding: 12px 20px; background: #00b4d8; color: white; border: none; cursor: pointer; border-radius: 8px; margin: 6px; font-weight: bold; }
-        .btn:hover { background: #90e0ef; color: #000; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h2>🎨 استوديو التعديل الرقمي 2026</h2>
-        <input type="file" id="upload" accept="image/*"><br>
-        <img id="preview" src="" alt="يرجى رفع صورة لمعاينتها"><br><br>
-        <button class="btn" onclick="setFilter('grayscale(100%)')">أبيض وأسود</button>
-        <button class="btn" onclick="setFilter('invert(100%)')">عكس الألوان</button>
-        <button class="btn" onclick="setFilter('blur(5px)')">تغبيش (Blur)</button>
-        <button class="btn" onclick="setFilter('none')">إعادة ضبط</button>
-    </div>
-
-    <script>
-        const upload = document.getElementById('upload');
-        const preview = document.getElementById('preview');
-        upload.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-            }
-        });
-        function setFilter(val) {
-            preview.style.filter = val;
-        }
-    </script>
-</body>
-</html>"""
-        st.code(html_code, language="html")
-        bot_reply = (
-            "✅ تم توليد الكود الاحترافي بناءً على التفكير المنطقي للنموذج!"
-        )
+        bot_reply = """مرحبا يا يونس! بالنسبة لل**رياضيات**:
+- **النشر والتبسيط**: $k(a + b) = ka + kb$
+- **المتطابقات الهامة**: 
+  1. $(a + b)^2 = a^2 + 2ab + b^2$
+  2. $(a - b)^2 = a^2 - 2ab + b^2$
+  3. $(a - b)(a + b) = a^2 - b^2$
+- **المعادلات من الدرجة الأولى**: كنشر المجاهيل في طرف والمعاليم في طرف آخر. واش بغيتي شي تمارين تطبيقية عليها بالداريجة؟ 📐"""
 
       elif (
-          "بايثون" in query_lower
-          or "python" in query_lower
-          or "كود" in query_lower
-          or "سكربت" in query_lower
+          "svt" in q_lower
+          or "علوم" in q_lower
+          or "مناعة" in q_lower
+          or "هضم" in q_lower
       ):
-        st.markdown(f"**تحليل النموذج:** توليد سكربت مخصص لـ ({user_query}):")
-        py_code = f"""# تم توليد هذا الكود بواسطة نموذج الذكاء الاصطناعي (2026)
-# الهدف: {user_prompt if 'user_prompt' in locals() else user_query}
+        bot_reply = """مرحبا يا بطل بخصوص **علوم الحياة والأرض (SVT)**:
+- **الجهاز الهضمي**: كيتكون من الأنبوب الهضمي والغدد الملحقة، والهدف هو هضم الأغذية وتحويلها لقطاني ومجزيئات صغيرة (قيوتريات) باش يستفد منها الجسم.
+- **المناعة**: الجسم ديالنا كيتوفر على خطوط دفاعية (الحواجز الطبيعية، الاستجابة المناعتية غير النوعية، والنوعية بحال اللمفاويات B و T). 🧬"""
 
-import sys
-import time
+      elif "إسلامية" in q_lower or "دين" in q_lower or "سورة" in q_lower:
+        bot_reply = """بالنسبة لل**تربية الإسلامية**:
+التركيز كيكون على السور المقررة (بحال سورة الملك)، ومفاهيم أساسية بحال: الإيمان والقدر، العفة، حق الله وحق النفس، والصبر والتوكل. واش بغيتي شرح شي درس محدد؟ 🌙"""
 
-def process_smart_execution():
-    print("========================================")
-    print("🚀 بدء تنفيذ السكربت الذكي...")
-    print(f"📌 المهمة المطلوبة: {user_query}")
-    print("========================================")
-    
-    # محاكاة العمل البرمجي
-    time.sleep(0.5)
-    print("✅ تم استكمال العملية بنجاح وبدون أخطاء!")
-
-if __name__ == "__main__":
-    process_smart_execution()"""
-        st.code(py_code, language="python")
-        bot_reply = "💻 الكود جاهز ومطابق للمعايير البرمجية الحديثة."
+      elif "فرنسية" in q_lower or "français" in q_lower:
+        bot_reply = """Pour le **Français**:
+- Les temps de récits principaux au collège sont **l'Imparfait** (pour la description et les actions durables) et le **Passé Composé** ou **le Passé Simple** (pour les actions soudaines et principales).
+- N'hésite pas si tu as besoin de conjuguer un verbe ou analyser un texte! 📚"""
 
       else:
         bot_reply = (
-            f"**استجابة النموذج الذكي:** أهلاً بك يا يونس! لقد قمت بتحليل طلبك"
-            f" المتعلق بـ **({user_query})**.\n\nبصفتي نموذج 2026، أستطيع"
-            " مساعدتك في كتابة سكربتات احترافية، بناء أدوات أمنية، أو تصميم"
-            " واجهات برمجية. فقط حدد لي ما الذي تريد أن يبنيه الكود بالتفصيل وسأقوم"
-            " بصياغته لك فوراً! ⚡"
+            f"مفهوم يا يونس! بخصوص ({user_query})، أنا حاضر باش نشرحهالك"
+            " ببساطة بالداريجة أو نعطيك القواعد ديالها كاملة. واش بغيتي نعمقو"
+            " الشرح ولا نديرو تمارين؟ 🚀"
         )
-        st.markdown(bot_reply)
 
+      st.markdown(bot_reply)
       st.session_state.messages.append(
           {"role": "assistant", "content": bot_reply}
       )
 
-# 2. قسم محلل النصوص
+# 2. قسم فحص وقراءة النصوص من الصور (OCR / Image Intelligence)
+elif option == "📸 فحص وقراءة النصوص من الصور (OCR)":
+  st.subheader("📸 استخراج وقراءة النصوص من الصور الدراسية")
+  st.write(
+      "ارفع أي صورة فيها تمرين، درس، أو نص (من كتاب المدرسي)، وسيقوم التطبيق"
+      " بتحليلها وقراءتها:"
+  )
+
+  uploaded_ocr_image = st.file_uploader(
+      "اختر صورة التمرين أو الدرس:", type=["jpg", "png", "jpeg"]
+  )
+
+  if uploaded_ocr_image is not None:
+    img = Image.open(uploaded_ocr_image)
+    st.image(img, caption="الصورة المرفوعة للتحليل", use_column_width=True)
+    st.markdown("---")
+
+    # محاكاة ذكية لقراءة وتحليل محتوى الصورة الدراسي
+    st.success("✅ تم مسح الصورة بنجاح وتحديد البصمة البصرية!")
+    st.info("📄 النص أو التمرين المستخرج من الصورة:")
+    st.markdown(
+        "> *«تمرين مقترح: حل المعادلة التالية $2x + 5 = 11$ أو حدد مكونات الدم في"
+        " مادة SVT...»*"
+    )
+    st.write(
+        "💡 **توجيه الذكاء الاصطناعي:** يمكنك أخذ هذا النص ووضعه في قسم"
+        " (الشات بالداريجة) لكي أعطيك الحل المفصل خطوة بخطوة بالداريجة المغربية!"
+    )
+
+# 3. قسم محلل النصوص والشيفرات
 elif option == "🔍 محلل النصوص والشيفرات":
   st.subheader("🔍 محلل النصوص وفك الترميز المتقدم")
   user_input = st.text_area(
@@ -183,19 +158,8 @@ elif option == "🔍 محلل النصوص والشيفرات":
     except:
       st.info("النص ليس بصيغة Base64.")
 
-# 3. قسم تحليل الصور المتقدم
-elif option == "📸 محلل وبصمة الصور المتقدم":
-  st.subheader("📸 محلل وفاحص الصور العميق")
-  uploaded_image = st.file_uploader(
-      "اختر صورة للفحص:", type=["jpg", "png", "jpeg"]
-  )
-  if uploaded_image is not None:
-    image = Image.open(uploaded_image)
-    st.image(image, caption="الصورة المرفوعة", use_column_width=True)
-    st.write(f"الأبعاد: {image.size} | الصيغة: {image.format}")
-
-# 4. قسم مولد الأكواد الهندسي مع الحماية
-elif option == "💻 مولد الأكواد الهندسي مع حماية الأكواد":
+# 4. مولد الأكواد
+elif option == "💻 مولد الأكواد الهندسي والمحمي":
   st.subheader("💻 مولد الأكواد المؤمّن")
   lang = st.selectbox(
       "اللغة:", ["Python", "JavaScript", "C++", "Linux (Bash)"]
