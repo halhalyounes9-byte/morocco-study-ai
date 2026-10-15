@@ -1,169 +1,172 @@
-import sys
-import io
 import streamlit as st
+import sqlite3
 
 # ==========================================
-# 1. إعدادات الصفحة والتصميم المعاصر 2026 (VIP Glassmorphism)
+# 1. إعدادات الصفحة وتصميم منصة الـ Hacking Lab
 # ==========================================
 st.set_page_config(
-    page_title="أكاديمية يونس للبرمجة - Python Lab 2026",
-    page_icon="💻",
+    page_title="متجر يونس الضعيف - CTF Security Lab",
+    page_icon="🏴‍☠️",
     layout="wide"
 )
 
 st.markdown("""
     <style>
     .stApp {
-        background: radial-gradient(circle at top right, #2e1065, #09090b 60%, #030014);
+        background: radial-gradient(circle at top right, #180505, #09090b 60%, #030014);
         background-attachment: fixed;
         color: #f8fafc;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
     }
-    .glass-header {
-        background: rgba(30, 27, 75, 0.4);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(99, 102, 241, 0.25);
-        padding: 24px;
-        border-radius: 16px;
-        text-align: center;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-    .lesson-card {
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(99, 102, 241, 0.2);
+    .lab-header {
+        background: rgba(127, 29, 29, 0.3);
+        border: 1px solid #dc2626;
         padding: 20px;
         border-radius: 14px;
+        text-align: center;
         margin-bottom: 20px;
     }
-    .code-output {
-        background-color: #020617;
-        border: 1px solid #334155;
-        border-radius: 10px;
+    .flag-box {
+        background: rgba(20, 83, 45, 0.4);
+        border: 1px solid #16a34a;
         padding: 15px;
-        font-family: 'Courier New', Courier, monospace;
-        color: #38bdf8;
+        border-radius: 10px;
+        color: #4ade80;
+        font-weight: bold;
     }
     .stButton>button {
-        border-radius: 10px !important;
-        background: linear-gradient(135deg, #4f46e5, #3b82f6) !important;
+        border-radius: 8px !important;
+        background: #dc2626 !important;
         color: white !important;
-        font-weight: 600 !important;
+        font-weight: bold !important;
         border: none !important;
-        padding: 10px 20px !important;
         width: 100%;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. قاعدة بيانات الدروس والتحديات البرمجية
+# 2. إعداد قاعدة بيانات محلية وهمية (تحتوي على ثغرات)
 # ==========================================
-LESSONS = {
-    "1. المتغيرات والطباعة (Variables & Print)": {
-        "concept": """
-        المتغير هو مثل **صندوق** تخزن فيه قيمة (نص، رقم، أو قائمة).
-        أمر `print()` يستعمل لعرض وتحذير القيمة على الشاشة.
-        """,
-        "example": 'name = "يونس"\nage = 16\nprint(f"مرحباً {name}، عمرك {age} سنة!")',
-        "task": 'اكتب كوداً ينشئ متغيراً باسم `city` يحتوي على مدينتك، ثم اطبعه باستخدام `print(city)`',
-        "expected_keyword": "print"
-    },
-    "2. الشروط واتخاذ القرار (If / Else)": {
-        "concept": """
-        تستخدم الشروط لجعل البرنامج يتخذ قرارات مختلفة بناءً على معطيات.
-        مثال: إذا كان العمر أكبر من 18، اسمح بدخول الموقع، وإلا ارفض.
-        """,
-        "example": 'age = 16\nif age >= 18:\n    print("مسموح")\nelse:\n    print("غير مسموح")',
-        "task": 'اكتب شرطاً ينظر في متغير `score = 80`؛ إذا كان أكبر من 50 يطبع "ناجح".',
-        "expected_keyword": "if"
-    },
-    "3. الحلقات التكرارية (For Loops)": {
-        "concept": """
-        تستخدم لتكرار تنفيذ الكود عدة مرات بدون الحاجة لإعادة كتابته.
-        """,
-        "example": 'for i in range(5):\n    print(f"التكرار رقم: {i+1}")',
-        "task": 'اكتب حلقة `for` تطبع الأرقام من 1 إلى 3.',
-        "expected_keyword": "for"
-    },
-    "4. القوائم (Lists)": {
-        "concept": """
-        القائمة تتيح لك حفظ مجموعة من العناصر أو الأسماء في مكان واحد.
-        """,
-        "example": 'games = ["Free Fire", "eFootball", "Roblox"]\nprint(games[0]) # يطبع العنصر الأول',
-        "task": 'أنشئ قائمة باسم `skills` تحتوي على لغتين برمجيتين واطبع القائمة.',
-        "expected_keyword": "print"
-    }
-}
+def init_db():
+    conn = sqlite3.connect('vulnerable_app.db', check_same_thread=False)
+    cursor = conn.cursor()
+    # جدول المستخدمين (كلمات المرور مكشوفة بدون تشفير!)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            password TEXT,
+            is_admin INTEGER
+        )
+    ''')
+    # جدول التعليقات (يقبل XSS)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user TEXT,
+            comment TEXT
+        )
+    ''')
+    # إدخال بيانات تجريبية
+    cursor.execute("SELECT COUNT(*) FROM users")
+    if cursor.fetchone()[0] == 0:
+        cursor.execute("INSERT INTO users (username, password, is_admin) VALUES ('admin', 'SecretAdmin123', 1)")
+        cursor.execute("INSERT INTO users (username, password, is_admin) VALUES ('youssef', '123456', 0)")
+        conn.commit()
+    return conn
+
+conn = init_db()
+cursor = conn.cursor()
 
 # ==========================================
-# 3. الهيدر والتصميم الرئيسي
+# 3. واجهة الموقع المزيف
 # ==========================================
 st.markdown("""
-    <div class="glass-header">
-        <h2 style="margin: 0; font-size: 26px; font-weight: 800; background: linear-gradient(to right, #a5b4fc, #e0e7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">💻 منصة تعلم البرمجة التفاعلية 2026</h2>
-        <p style="margin: 8px 0 0 0; color: #94a3b8; font-size: 14px;">اقرأ الدرس، جرب الكود بنفسك، وحل التحديات البرمجية مباشرة!</p>
+    <div class="lab-header">
+        <h2 style="margin:0; color: #f87171;">🏴‍☠️ مختبر الثغرات والتخريب (Vulnerable CTF Lab)</h2>
+        <p style="margin:5px 0 0 0; color:#cbd5e1; font-size:13px;">هذا الموقع يحتوي على ثغرات مقصودة. مهمتك هي اكتشافها واستغلالها!</p>
     </div>
 """, unsafe_allow_html=True)
 
-# الشريط الجانبي اختيار الدرس
-with st.sidebar:
-    st.markdown("### 📚 المسار التعليمي")
-    selected_lesson_name = st.radio("اختر الدرس:", list(LESSONS.keys()))
-    st.divider()
-    st.info("💡 **نصيحة يونس البرمجية:** البرمجة ليست حفظاً بل تجربة ومحاولة وممارسة!")
+menu = st.sidebar.radio("🧭 التنقل في الموقع:", ["🏠 الصفحة الرئيسية", "🔐 تسجيل الدخول", "💬 قسم التعليقات (Community)", "🕵️‍♂️ لوحة كشف التحديات (Flags)"])
 
-current_lesson = LESSONS[selected_lesson_name]
+# ------------------------------------------
+# الصفحة الأولى: الرئيسية
+# ------------------------------------------
+if menu == "🏠 الصفحة الرئيسية":
+    st.subheader("مرحباً بك في موقع خدمات يونس التجاري")
+    st.write("هذا الموقع مصمم خصيصاً لاختبار مهاراتك الأمنية. تجول في الأقسام وابحث عن الثغرات البرمجية!")
+    
+    st.info("💡 **تلميح للمحقق:** جرب تسجيل الدخول بصلاحيات المدير `admin` بدون معرفة كلمة المرور عبر التلاعب بالمدخلات (SQLi).")
 
-# ==========================================
-# 4. عرض المحتوى والتجربة الحية
-# ==========================================
-col_learn, col_code = st.columns([1, 1.2])
-
-with col_learn:
-    st.subheader(f"📖 {selected_lesson_name}")
+# ------------------------------------------
+# الصفحة الثانية: تسجيل الدخول (تحتوي على SQL Injection)
+# ------------------------------------------
+elif menu == "🔐 تسجيل الدخول":
+    st.subheader("تسجيل الدخول إلى حسابك")
     
-    st.markdown(f'<div class="lesson-card"><b>المفهوم الأساسي:</b><br>{current_lesson["concept"]}</div>', unsafe_allow_html=True)
+    username_input = st.text_input("اسم المستخدم:")
+    password_input = st.text_input("كلمة المرور:", type="password")
     
-    st.markdown("**مثال توضيحي:**")
-    st.code(current_lesson["example"], language="python")
-    
-    st.markdown("---")
-    st.subheader("🎯 التحدي المطلوب:")
-    st.warning(current_lesson["task"])
-
-with col_code:
-    st.subheader("👨‍💻 محرر الكود والمختبر الحي")
-    
-    user_code = st.text_area(
-        "اكتب كود بايثون هنا لتجربته وتستخرج النتيجة:",
-        value=current_lesson["example"],
-        height=220
-    )
-    
-    if st.button("🚀 تشغيل الكود واختبار النتيجة"):
-        # التقاط المخرجات البرمجية (stdout)
-        buffer = io.StringIO()
-        sys.stdout = buffer
+    if st.button("دخول"):
+        # ⚠️ الثغرة الأولى: ثغرة حقن SQL مباشرة بدون حماية وبدون Prepared Statements!
+        query = f"SELECT * FROM users WHERE username = '{username_input}' AND password = '{password_input}'"
         
         try:
-            # تنفيذ الكود البرمجي بأمان محلي
-            exec(user_code)
-            sys.stdout = sys.__stdout__
-            output = buffer.getvalue()
+            cursor.execute(query)
+            user = cursor.fetchone()
             
-            st.success("✅ تم تنفيذ الكود بنجاح!")
-            st.markdown("**مخرجات الكود (Output):**")
-            st.code(output if output else "تم تنفيذ الكود بنجاح بدون طباعة نصية.", language="text")
-            
-            # التحقق من التحدي
-            if current_lesson["expected_keyword"] in user_code:
-                st.balloons()
-                st.toast("ممتاز يا يونس! لقد طبقت فكرة الدرس بنجاح 🔥", icon="🎉")
-            
+            if user:
+                st.success(f"🎉 تم تسجيل الدخول بنجاح! مرحباً بك يا {user[1]}")
+                if user[3] == 1: # إذا كان مدير النظام
+                    st.markdown('<div class="flag-box">🚩 FLAG 1 مكتشف: SQL_INJECTION_MASTER_2026</div>', unsafe_allow_html=True)
+            else:
+                st.error("❌ اسم المستخدم أو كلمة المرور غير صحيحة.")
         except Exception as e:
-            sys.stdout = sys.__stdout__
-            st.error("❌ حدث خطأ في الكود:")
-            st.code(str(e), language="python")
+            st.error(f"حدث خطأ في قاعدة البيانات (خطأ في الاستعلام): {e}")
 
+# ------------------------------------------
+# الصفحة الثالثة: التعليقات (تحتوي على Stored XSS)
+# ------------------------------------------
+elif menu == "💬 قسم التعليقات (Community)":
+    st.subheader("آراء المستخدمين والتعليقات")
+    
+    comment_user = st.text_input("اسمك:", value="زائر")
+    new_comment = st.text_area("اكتب تعليقك هنا:")
+    
+    if st.button("إرسال التعليق"):
+        if new_comment:
+            # تخزين التعليق كما هو بدون تعقيم أو تنظيف (XSS Vulnerability)
+            cursor.execute("INSERT INTO comments (user, comment) VALUES (?, ?)", (comment_user, new_comment))
+            conn.commit()
+            st.success("تم إرسال تعليقك!")
+
+    st.divider()
+    st.markdown("### التعليقات السابقة:")
+    cursor.execute("SELECT user, comment FROM comments")
+    rows = cursor.fetchall()
+    
+    for r in rows:
+        # ⚠️ الثغرة الثانية: عرض النصوص مباشرة كـ HTML بدون حماية (تسمح بتنفيذ أكواد JavaScript خبيثة)
+        st.markdown(f"""
+            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+                <b>{r[0]} قال:</b><br>{r[1]}
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.info("💡 **تلميح XSS:** جرب كتابة كود جافاسكريبت مصغر داخل التعليق مثل: `<script>alert('XSS Found!')</script>` وانظر ماذا سيحدث!")
+
+# ------------------------------------------
+# الصفحة الرابعة: لوحة كشف التحديات
+# ------------------------------------------
+elif menu == "🕵️‍♂️ لوحة كشف التحديات (Flags)":
+    st.subheader("🎯 قائمة التحديات المطلوب اكتشافها في هذا الموقع:")
+    
+    st.markdown("""
+    1. **التحدي الأول (SQL Injection):** حاول الدخول لصفحة المشرف `admin` بدون كلمة مرور عبر استغلال خانة تسجيل الدخول.
+    2. **التحدي الثاني (Stored XSS):** اجعل الموقع ينفذ كود تنبيه (`alert`) من خلال خانة التعليقات.
+    3. **التحدي الثالث (Information Disclosure):** هل يمكنك معرفة أين يتم حفظ كلمات المرور الخاصة بالمستخدمين الآخرين في الكود أو قاعدة البيانات؟
+    """)
+    
+    st.warning("عندما تكتشف الثغرة، فكر معي: كيف يمكننا **إصلاحها برمجياً** لتأمين هذا الموقع بالكامل؟")
