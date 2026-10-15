@@ -1,40 +1,66 @@
+import io
 import streamlit as st
 from PIL import Image, ImageOps, ImageEnhance, ImageFilter
 
 # ==========================================
-# 1. إعدادات الصفحة وتصميم الخلفية (أسود وبنفسجي فاخر)
+# 1. إعدادات الصفحة والتصميم المعاصر Modern Glassmorphism Theme
 # ==========================================
 st.set_page_config(
-    page_title="استوديو التأثيرات - VIP",
+    page_title="استوديو VIP المعاصر - Youssef Studio",
     page_icon="🎨",
     layout="wide"
 )
 
 st.markdown("""
     <style>
+    /* خلفية متدرجة معاصرة ومظلمة */
     .stApp {
-        background: linear-gradient(135deg, #09090b, #1e1b4b, #2e1065);
+        background: radial-gradient(circle at top right, #2e1065, #09090b 60%, #030014);
         background-attachment: fixed;
         color: #f8fafc;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
+    
+    /* كارت الواجهة بتأثير زجاجي مدرج Modern Card Design */
+    .glass-header {
+        background: rgba(30, 27, 75, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(99, 102, 241, 0.25);
+        padding: 24px;
+        border-radius: 16px;
+        text-align: center;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    /* شارة المؤسس */
     .founder-badge {
-        background: linear-gradient(135deg, #1e1b4b, #4338ca);
+        background: linear-gradient(135deg, #312e81, #4338ca);
         border: 1px solid #6366f1;
-        padding: 12px;
-        border-radius: 10px;
+        padding: 14px;
+        border-radius: 12px;
         text-align: center;
         color: white;
-        font-weight: bold;
-        margin-bottom: 15px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(67, 56, 202, 0.4);
     }
+    
+    /* أزرار تفاعلية معاصرة */
     .stButton>button {
-        border-radius: 8px;
-        background-color: #4f46e5;
-        color: white;
-        font-weight: bold;
+        border-radius: 10px !important;
+        background: linear-gradient(135deg, #4f46e5, #3b82f6) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border: none !important;
+        padding: 10px 20px !important;
+        transition: all 0.3s ease !important;
+        width: 100%;
     }
     .stButton>button:hover {
-        background-color: #4338ca;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -44,59 +70,84 @@ st.markdown("""
 # ==========================================
 if "custom_effects" not in st.session_state:
     st.session_state.custom_effects = {
-        "أبيض وأسود عتيق": {"brightness": 1.0, "contrast": 1.0, "grayscale": True, "invert": False, "blur": False},
-        "عكس الألوان": {"brightness": 1.0, "contrast": 1.0, "grayscale": False, "invert": True, "blur": False},
-        "إضاءة عالية VIP": {"brightness": 1.8, "contrast": 1.3, "grayscale": False, "invert": False, "blur": False},
-        "تأثير سينمائي داكن": {"brightness": 0.7, "contrast": 1.6, "grayscale": False, "invert": False, "blur": False},
+        "أبيض وأسود عتيق": {"brightness": 1.0, "contrast": 1.0, "grayscale": True, "invert": False, "blur": False, "neon": False, "frame": False},
+        "عكس الألوان": {"brightness": 1.0, "contrast": 1.0, "grayscale": False, "invert": True, "blur": False, "neon": False, "frame": False},
+        "إضاءة عالية VIP": {"brightness": 1.8, "contrast": 1.3, "grayscale": False, "invert": False, "blur": False, "neon": False, "frame": False},
+        "تأثير سينمائي داكن": {"brightness": 0.7, "contrast": 1.6, "grayscale": False, "invert": False, "blur": False, "neon": False, "frame": False},
+        "نيون سايبربانك ⚡": {"brightness": 1.4, "contrast": 1.5, "grayscale": False, "invert": False, "blur": False, "neon": True, "frame": True},
     }
 
 # ==========================================
-# 3. الشريط الجانبي: لوحة المؤسس واختيار الفلاتر
+# 3. الشريط الجانبي المعاصر
 # ==========================================
 with st.sidebar:
-    st.markdown('<div class="founder-badge">👑 لوحة التحكم الخاصة بالمؤسس<br><span style="font-size:11px; color:#cbd5e1;">Developer: يونس 🚀</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="founder-badge">👑 لوحة المؤسس المتقدمة<br><span style="font-size:11px; color:#cbd5e1; font-weight:400;">Youssef Studio v2026</span></div>', unsafe_allow_html=True)
     
-    founder_mode = st.checkbox("⚙️ تفعيل وضع المؤسس (إضافة وتعديل التأثيرات)", value=False)
+    founder_mode = st.toggle("⚡ وضع المؤسس (التعديل والتخزين)", value=False)
     
-    st.markdown("---")
-    st.title("🎨 التأثيرات المتاحة")
+    st.divider()
+    st.markdown("### 🎨 المكتبة الخاصة بالتأثيرات")
     
-    # جعل التأثيرات الافتراضية تبدأ مباشرة بدون خيار "الصورة الأصلية" لكي يتغير الشكل فوراً
     all_effects = list(st.session_state.custom_effects.keys())
-    selected_effect = st.selectbox("اختر التأثير لتطبقه على الصورة:", all_effects)
+    selected_effect = st.selectbox("اختر الفلتر لتطبقه مباشرة:", all_effects)
 
 # ==========================================
-# 4. الواجهة الرئيسية
+# 4. الهيدر الترحيبي
 # ==========================================
 st.markdown("""
-    <div style="background: rgba(30, 27, 75, 0.6); padding: 20px; border-radius: 14px; text-align: center; color: white; margin-bottom: 20px; border: 1px solid #4338ca;">
-        <h2 style="margin: 0;">🎨 استوديو تأثيرات الصور الفاخر</h2>
-        <p style="margin: 5px 0 0 0; color: #cbd5e1; font-size: 13px;">ارفع صورتك وطبق عليها أقوى الفلاتر والتأثيرات فوراً</p>
+    <div class="glass-header">
+        <h2 style="margin: 0; font-size: 26px; font-weight: 800; background: linear-gradient(to right, #a5b4fc, #e0e7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎨 استوديو التعديل البصري الخارق</h2>
+        <p style="margin: 8px 0 0 0; color: #94a3b8; font-size: 14px;">ارفع صورتك وطبق أحدث التأثيرات الفاخرة مع إمكانية التعديل والتحميل الفوري</p>
     </div>
 """, unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("ارفع الصورة هنا للبدء بالتعديل:", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("ارفع الصورة من هاتفك أو جهازك:", type=["jpg", "jpeg", "png", "webp"])
 
-if uploaded_file is not None:
-    original_image = Image.open(uploaded_file)
+# ==========================================
+# 5. منطقة التعديل التفاعلية (معززة بـ st.fragment المعاصرة)
+# ==========================================
+@st.fragment
+def render_studio(image_file):
+    original_image = Image.open(image_file)
     processed_image = original_image.copy()
 
-    # --- لوحة التحكم الخاصة بالمؤسس عند التفعيل ---
+    # --- خيارات القص المعاصرة ---
+    with st.expander("✂️ قص وتكييف الأبعاد (للسوشيال ميديا)", expanded=False):
+        crop_option = st.segmented_control(
+            "اختر الأبعاد المطلوبة:",
+            options=["الأصلية", "بروفايل (1:1)", "سناب/تيك توك (9:16)"],
+            default="الأصلية"
+        )
+        w, h = processed_image.size
+        if crop_option == "بروفايل (1:1)":
+            min_dim = min(w, h)
+            left = (w - min_dim) / 2
+            top = (h - min_dim) / 2
+            processed_image = processed_image.crop((left, top, left + min_dim, top + min_dim))
+        elif crop_option == "سناب/تيك توك (9:16)":
+            target_h = int(w * 16 / 9)
+            if h > target_h:
+                top = (h - target_h) / 2
+                processed_image = processed_image.crop((0, top, w, top + target_h))
+
+    # --- لوحة المؤسس للتخصيص والحفظ ---
     if founder_mode:
-        st.info("🛠️ **وضع المؤسس مفعل:** يمكنك تعديل زوايا الإضاءة والتباين وحفظ هذا التأثير تلقائياً في القائمة!")
+        st.info("🛠️ **أنت الآن في وضع التحكم المباشر للمؤسس:** عدل المؤشرات وسيتحدث المعاين فوراً بدون بطء!")
         
         col_ctrl1, col_ctrl2, col_ctrl3 = st.columns(3)
         with col_ctrl1:
             b_val = st.slider("السطوع (Brightness):", 0.2, 3.0, 1.2, 0.1)
             c_val = st.slider("التباين (Contrast):", 0.2, 3.0, 1.2, 0.1)
         with col_ctrl2:
-            is_gray = st.checkbox("تحويل لأبيض وأسود")
+            is_gray = st.checkbox("أبيض وأسود")
             is_inv = st.checkbox("عكس الألوان")
+            is_neon = st.checkbox("تأثير نيون ⚡")
         with col_ctrl3:
-            is_blur = st.checkbox("تأثير الضبابية (Blur)")
-            new_effect_name = st.text_input("اسم التأثير الجديد لتخزينه:", placeholder="مثلاً: فلتر يونس الفخم")
+            is_blur = st.checkbox("ضبابية (Blur)")
+            is_frame = st.checkbox("إطار VIP 🖼️")
+            new_effect_name = st.text_input("اسم التأثير للحفظ:", placeholder="اسم الفلتر الجديد")
 
-        # تطبيق الإعدادات المباشرة للمؤسس
+        # معالجة التأثيرات المباشرة
         if is_gray:
             processed_image = ImageOps.grayscale(processed_image)
         if is_inv:
@@ -105,29 +156,32 @@ if uploaded_file is not None:
             processed_image = ImageOps.invert(processed_image)
         if is_blur:
             processed_image = processed_image.filter(ImageFilter.BLUR)
+        if is_neon:
+            processed_image = processed_image.filter(ImageFilter.SHARPEN)
+            enhancer_color = ImageEnhance.Color(processed_image)
+            processed_image = enhancer_color.enhance(1.8)
 
-        # تعديل السطوع والتباين
         enhancer_b = ImageEnhance.Brightness(processed_image)
         processed_image = enhancer_b.enhance(b_val)
         enhancer_c = ImageEnhance.Contrast(processed_image)
         processed_image = enhancer_c.enhance(c_val)
 
-        # زر حفظ التأثير المخصص تلقائياً في القائمة
-        if st.button("💾 حفظ التأثير وإضافته تلقائياً للقائمة"):
+        if is_frame:
+            processed_image = ImageOps.expand(processed_image, border=20, fill='#4f46e5')
+
+        if st.button("💾 حفظ التأثير فوراً للقائمة"):
             if new_effect_name.strip():
                 st.session_state.custom_effects[new_effect_name] = {
-                    "brightness": b_val,
-                    "contrast": c_val,
-                    "grayscale": is_gray,
-                    "invert": is_inv,
-                    "blur": is_blur
+                    "brightness": b_val, "contrast": c_val,
+                    "grayscale": is_gray, "invert": is_inv,
+                    "blur": is_blur, "neon": is_neon, "frame": is_frame
                 }
-                st.success(f"تم حفظ التأثير '{new_effect_name}' وإضافته لقائمة التأثيرات بنجاح! 🚀")
+                st.toast(f"تم حفظ '{new_effect_name}' بنجاح! 🚀")
                 st.rerun()
             else:
-                st.warning("يرجى كتابة اسم للتأثير قبل الحفظ.")
+                st.warning("يرجى إدخال اسم للتأثير أولاً.")
 
-    # --- تطبيق التأثير المختار من القائمة ---
+    # --- تطبيق التأثير الجاهز للمستخدم العادي ---
     else:
         if selected_effect in st.session_state.custom_effects:
             eff_data = st.session_state.custom_effects[selected_effect]
@@ -140,20 +194,43 @@ if uploaded_file is not None:
                 processed_image = ImageOps.invert(processed_image)
             if eff_data["blur"]:
                 processed_image = processed_image.filter(ImageFilter.BLUR)
+            if eff_data["neon"]:
+                processed_image = processed_image.filter(ImageFilter.SHARPEN)
+                enhancer_color = ImageEnhance.Color(processed_image)
+                processed_image = enhancer_color.enhance(1.8)
 
             enhancer_b = ImageEnhance.Brightness(processed_image)
             processed_image = enhancer_b.enhance(eff_data["brightness"])
             enhancer_c = ImageEnhance.Contrast(processed_image)
             processed_image = enhancer_c.enhance(eff_data["contrast"])
 
-    # --- عرض المقارنة (قبل وبعد) ---
+            if eff_data["frame"]:
+                processed_image = ImageOps.expand(processed_image, border=20, fill='#4f46e5')
+
+    # --- المعاينة الحديثة جنباً إلى جنب ---
     col_img1, col_img2 = st.columns(2)
     with col_img1:
         st.subheader("📷 الصورة الأصلية")
-        st.image(original_image, use_column_width=True)
+        st.image(original_image, use_container_width=True)
+        
     with col_img2:
-        st.subheader(f"✨ النتيجة: ({selected_effect if not founder_mode else 'معاينة وضع المؤسس'})")
-        st.image(processed_image, use_column_width=True)
+        st.subheader(f"✨ الصورة المعدلة: ({selected_effect if not founder_mode else 'معاينة المؤسس'})")
+        st.image(processed_image, use_container_width=True)
+        
+        # حفظ الصورة وتحضيرها للتحميل
+        buffered = io.BytesIO()
+        save_img = processed_image.convert('RGB') if processed_image.mode in ('RGBA', 'LA', 'P') else processed_image
+        save_img.save(buffered, format="JPEG", quality=95)
+        
+        st.download_button(
+            label="📥 تحميل الصورة المعدلة بجودة عالية",
+            data=buffered.getvalue(),
+            file_name="youssef_studio_export.jpg",
+            mime="image/jpeg"
+        )
 
+# تشغيل الاستوديو عند رفع الصورة
+if uploaded_file is not None:
+    render_studio(uploaded_file)
 else:
-    st.info("💡 ارفع أي صورة لتبدأ باستخدام التعديلات وتجربة وضع المؤسس!")
+    st.info("💡 قم برفع أي صورة لتبدأ تجربة الاستوديو المعاصر والتعديل الفوري!")
