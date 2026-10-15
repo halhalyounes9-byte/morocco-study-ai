@@ -52,43 +52,35 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. مكتبة التأثيرات الضخمة (أكثر من 100+ تأثير متنوع ومقسّم)
+# 2. مكتبة الـ 100+ تأثير المتنوعة بدقة
 # ==========================================
 if "effects_library" not in st.session_state:
     st.session_state.effects_library = {
-        # --- فئة الفلاتر العتيقة والكلاسيكية ---
-        "أبيض وأسود عتيق (Grayscale)": {"b": 1.0, "c": 1.0, "gray": True, "inv": False, "blur": False, "sharp": False, "frame": False},
-        "سيبيا دراما (Sepia-like)": {"b": 1.1, "c": 1.3, "gray": False, "inv": False, "blur": False, "sharp": True, "frame": False},
-        "سينمائي داكن (Dark Cinema)": {"b": 0.7, "c": 1.6, "gray": False, "inv": False, "blur": False, "sharp": False, "frame": False},
-        "ريترو باهت (Faded Retro)": {"b": 1.2, "c": 0.8, "gray": False, "inv": False, "blur": False, "sharp": False, "frame": False},
-        
-        # --- فئة الإضاءة العالية والـ VIP ---
-        "إضاءة عالية VIP (Bright)": {"b": 1.8, "c": 1.3, "gray": False, "inv": False, "blur": False, "sharp": False, "frame": False},
-        "توهج نيون سايبربانك (Neon Glow)": {"b": 1.4, "c": 1.5, "gray": False, "inv": False, "blur": False, "sharp": True, "frame": True},
-        "إشراقة الشمس (Sunlight)": {"b": 1.3, "c": 1.1, "gray": False, "inv": False, "blur": False, "sharp": False, "frame": False},
-        "تباين ملكي حاد (High Contrast)": {"b": 1.0, "c": 2.2, "gray": False, "inv": False, "blur": False, "sharp": True, "frame": False},
-
-        # --- فئة المؤثرات الفنية والضبابية ---
-        "ضبابية حالمة (Dreamy Blur)": {"b": 1.1, "c": 1.0, "gray": False, "inv": False, "blur": True, "sharp": False, "frame": False},
-        "عكس الألوان (Invert)": {"b": 1.0, "c": 1.0, "gray": False, "inv": True, "blur": False, "sharp": False, "frame": False},
-        "حواف بارزة فنية (Contour)": {"b": 1.0, "c": 1.2, "gray": False, "inv": False, "blur": False, "sharp": False, "frame": True},
-        "تأثير حاد ومفصل (Ultra Sharp)": {"b": 1.1, "c": 1.3, "gray": False, "inv": False, "blur": False, "sharp": True, "frame": False},
+        # --- التأثيرات المميزة (Favorites) ---
+        "✨ إضاءة عالية VIP (Bright)": {"b": 1.7, "c": 1.4, "gray": False, "inv": False, "blur": False, "sharp": True, "frame": False},
+        "🖤 أبيض وأسود نقي (Pure B&W)": {"b": 1.0, "c": 1.3, "gray": True, "inv": False, "blur": False, "sharp": False, "frame": False},
+        "⚡ توهج سايبربانك (Neon Cyber)": {"b": 1.5, "c": 1.6, "gray": False, "inv": False, "blur": False, "sharp": True, "frame": True},
+        "🎬 سينمائي داكن (Dark Cinema)": {"b": 0.75, "c": 1.8, "gray": False, "inv": False, "blur": False, "sharp": False, "frame": False},
+        "🌌 ضبابية حالمة (Dreamy Blur)": {"b": 1.1, "c": 1.1, "gray": False, "inv": False, "blur": True, "sharp": False, "frame": False},
+        "🔄 عكس الألوان الفني (Invert Art)": {"b": 1.0, "c": 1.0, "gray": False, "inv": True, "blur": False, "sharp": False, "frame": False},
     }
 
-    # توليد بقية التأثيرات تلقائياً لتتجاوز 100 تأثير مختلف كما طلبت!
+    # توليد الـ 100 تأثير المتبقية بقيم متباينة وحقيقية تضمن عدم تكرار شكل الأبيض والأسود
+    styles_list = ["سينمائي", "ريترو", "سايبر", "إضاءة ملكية", "تباين حاد", "توهج فني", "كلاسيكي"]
     for i in range(1, 95):
-        st.session_state.effects_library[f"تأثير ملكي مخصص #{i}"] = {
-            "b": 0.5 + (i % 20) * 0.1,
-            "c": 0.6 + (i % 15) * 0.1,
-            "gray": i % 7 == 0,
-            "inv": i == 13,
-            "blur": i % 11 == 0,
-            "sharp": i % 3 == 0,
-            "frame": i % 4 == 0
+        style_name = styles_list[i % len(styles_list)]
+        st.session_state.effects_library[f"فلتر {style_name} #{i}"] = {
+            "b": round(0.6 + (i % 25) * 0.08, 2),
+            "c": round(0.7 + (i % 20) * 0.09, 2),
+            "gray": (i % 12 == 0),  # نسبة قليلة فقط تكون أبيض وأسود
+            "inv": (i == 45 or i == 88),
+            "blur": (i % 15 == 0),
+            "sharp": (i % 3 == 0 or i % 5 == 0),
+            "frame": (i % 4 == 0)
         }
 
 # ==========================================
-# 3. الشريط الجانبي وتصنيف التأثيرات (مثل التطبيق المطلوب)
+# 3. الشريط الجانبي وتصنيف التأثيرات
 # ==========================================
 with st.sidebar:
     st.markdown('<div class="founder-badge">👑 لوحة المؤسس الملكية<br><span style="font-size:11px; color:#cbd5e1;">Youssef VIP Studio</span></div>', unsafe_allow_html=True)
@@ -103,11 +95,16 @@ with st.sidebar:
     all_effect_names = list(st.session_state.effects_library.keys())
     
     if tab_choice == "Favorites المفضلة":
-        # عرض التأثيرات الأساسية السريعة
-        favorite_list = ["أبيض وأسود عتيق (Grayscale)", "إضاءة عالية VIP (Bright)", "توهج نيون سايبربانك (Neon Glow)", "سينمائي داكن (Dark Cinema)"]
+        favorite_list = [
+            "✨ إضاءة عالية VIP (Bright)",
+            "🖤 أبيض وأسود نقي (Pure B&W)",
+            "⚡ توهج سايبربانك (Neon Cyber)",
+            "🎬 سينمائي داكن (Dark Cinema)",
+            "🌌 ضبابية حالمة (Dreamy Blur)",
+            "🔄 عكس الألوان الفني (Invert Art)"
+        ]
         selected_effect = st.selectbox("اختر من المفضلة:", favorite_list)
     else:
-        # عرض القائمة الكاملة التي تضم أكثر من 100 تأثير
         selected_effect = st.selectbox("اختر من مكتبة الـ 100+ تأثير:", all_effect_names)
 
 # ==========================================
@@ -116,7 +113,7 @@ with st.sidebar:
 st.markdown("""
     <div class="glass-header">
         <h2 style="margin: 0; font-size: 26px; font-weight: 800; background: linear-gradient(to right, #a5b4fc, #e0e7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎨 استوديو التأثيرات البصرية المتكامل</h2>
-        <p style="margin: 8px 0 0 0; color: #94a3b8; font-size: 14px;">اختر من بين أكثر من 100+ تأثير فخم، ارفع صورتك، وطبق الفلاتر فوراً</p>
+        <p style="margin: 8px 0 0 0; color: #94a3b8; font-size: 14px;">مكتبة تضم أكثر من 100+ تأثير فخم ومختلف لتغيير مظهر صورك فوراً</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -199,20 +196,27 @@ def render_studio(image_file):
         if selected_effect in st.session_state.effects_library:
             eff = st.session_state.effects_library[selected_effect]
             
+            # 1. تطبيق الأبيض والأسود فقط إذا كان مفعلاً في هذا الفلتر بالذات
             if eff["gray"]:
                 processed_image = ImageOps.grayscale(processed_image)
+            
+            # 2. عكس الألوان
             if eff["inv"]:
                 if processed_image.mode == 'RGBA':
                     processed_image = processed_image.convert('RGB')
                 processed_image = ImageOps.invert(processed_image)
+            
+            # 3. الضبابية والحدة
             if eff["blur"]:
                 processed_image = processed_image.filter(ImageFilter.BLUR)
             if eff["sharp"]:
                 processed_image = processed_image.filter(ImageFilter.SHARPEN)
 
+            # 4. السطوع والتباين
             processed_image = ImageEnhance.Brightness(processed_image).enhance(eff["b"])
             processed_image = ImageEnhance.Contrast(processed_image).enhance(eff["c"])
 
+            # 5. الإطار الفاخر
             if eff["frame"]:
                 processed_image = ImageOps.expand(processed_image, border=25, fill='#4f46e5')
 
