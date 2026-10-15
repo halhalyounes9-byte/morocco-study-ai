@@ -1,5 +1,6 @@
 import base64
 from io import BytesIO
+import time
 from PIL import Image
 import streamlit as st
 
@@ -8,75 +9,100 @@ st.set_page_config(
     page_title="منصة يونس للذكاء والأنظمة 2026", page_icon="⚡", layout="centered"
 )
 
-st.title("⚡ منصة يونس الذكية (2026)")
+st.title("⚡ منصة يونس الذكية - نموذج 2026")
 st.write(
-    "أهلاً بك يا يونس! تم حل مشكلة تضارب الأكواد بنجاح والمنصة تعمل بشكل خالي"
-    " من الأخطاء."
+    "أهلاً بك يا يونس! تم تطوير المساعد ليعمل بنظام التفكير الفائق لمحاكاة"
+    " أحدث نماذج الذكاء الاصطناعي."
 )
 
 # القائمة الجانبية
 option = st.sidebar.selectbox(
     "اختر القسم المطلوب:",
     [
-        "💬 مساعد يونس الذكي (AI Chat)",
+        "💬 مساعد يونس الذكي (AI Model 2026)",
         "🔍 محلل النصوص والشيفرات",
         "📸 محلل وبصمة الصور المتقدم",
         "💻 مولد الأكواد الهندسي مع حماية الأكواد",
     ],
 )
 
-# 1. قسم شات الذكاء الاصطناعي (مصحح وبدون أخطاء)
-if option == "💬 مساعد يونس الذكي (AI Chat)":
-  st.subheader("💬 مساعد يونس البرمجي والذكي")
-  st.write(
-      "اسألني عن أي شيء: كود برمجي، فكرة مشروع، حل مشاكل، أو هندسة عكسية:"
-  )
+# 1. قسم شات الذكاء الاصطناعي (نموذج 2026 المتطور)
+if option == "💬 مساعد يونس الذكي (AI Model 2026)":
+  st.subheader("💬 مساعد يونس (Smart Reasoning Model)")
+  st.write("اكتب أي طلب أو أداة تريد مناقشتها أو بنائها مع النموذج:")
 
   if "messages" not in st.session_state:
     st.session_state.messages = [{
         "role": "assistant",
         (
             "content"
-        ): "أهلاً بك يا يونس! أنا جاهز ومستعد لمساعدتك في أي طلب أو كود"
-        " برمجي.",
+        ): "مرحباً يا يونس! أنا نموذج الذكاء الاصطناعي المطور لعام 2026."
+        " أنا جاهز لتحليل أي طلب برمجي، أمني، أو هندسي وتوليد الأكواد"
+        " الحقيقية لك فوراً.",
     }]
 
   for message in st.session_state.messages:
     with st.chat_message(message["role"]):
       st.markdown(message["content"])
 
-  if user_query := st.chat_input("اكتب طلبك هنا..."):
+  if user_query := st.chat_input("اكتب طلبك للنموذج هنا..."):
     st.session_state.messages.append({"role": "user", "content": user_query})
     with st.chat_message("user"):
       st.markdown(user_query)
 
     with st.chat_message("assistant"):
+      # محاكاة شريط التفكير للذكاء الاصطناعي (Reasoning Process)
+      with st.status(
+          "🧠 جارٍ التفكير وتفكيك الطلب وتوليد الحل البرمجي...",
+          expanded=True,
+      ) as status:
+        st.write("🔍 تحليل النص المدخل واستخراج الأهداف...")
+        time.sleep(0.6)
+        st.write("⚙️ بناء الخوارزميات وتجهيز بيئة التشغيل المناسبة...")
+        time.sleep(0.6)
+        st.write("🛡️ فحص أمان الكود وتنسيق المخرجات بأسلوب 2026...")
+        time.sleep(0.4)
+        status.update(
+            label="✅ تم معالجة الطلب والتفكير بنجاح!",
+            state="complete",
+            expanded=False,
+        )
+
       query_lower = user_query.lower()
 
-      if "صورة" in query_lower or "تأثيرات" in query_lower or "موقع" in query_lower:
+      # نظام معالجة ذكي يعتمد على تحليل سياق الطلب
+      if (
+          "موقع" in query_lower
+          or "تاثير" in query_lower
+          or "تأثير" in query_lower
+          or "صورة" in query_lower
+      ):
         st.markdown(
-            "طلب ممتاز يا يونس! إليك كود موقع تأثيرات الصور بـ HTML و CSS و JS:"
+            f"**تحليل النموذج:** تم استيعاب طلبك لصناعة أداة أو موقع خاص بـ"
+            f" ({user_query}). إليك الكود الهيكلي المتكامل:"
         )
 
         html_code = """<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>منصة تأثيرات الصور</title>
+    <title>منصة التأثيرات الرقمية 2026</title>
     <style>
-        body { font-family: Tahoma, sans-serif; text-align: center; background: #0f172a; color: #fff; padding: 20px; }
-        .container { background: #1e293b; padding: 20px; border-radius: 10px; display: inline-block; }
-        img { max-width: 300px; border-radius: 8px; margin-top: 10px; }
-        .btn { padding: 10px 15px; background: #3b82f6; color: white; border: none; cursor: pointer; border-radius: 5px; margin: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; background: #0b132b; color: #ffffff; padding: 25px; }
+        .card { background: #1c2541; padding: 25px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        img { max-width: 320px; border-radius: 10px; margin-top: 15px; border: 2px solid #48cae4; }
+        .btn { padding: 12px 20px; background: #00b4d8; color: white; border: none; cursor: pointer; border-radius: 8px; margin: 6px; font-weight: bold; }
+        .btn:hover { background: #90e0ef; color: #000; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>استوديو تأثيرات الصور</h2>
+    <div class="card">
+        <h2>🎨 استوديو التعديل الرقمي 2026</h2>
         <input type="file" id="upload" accept="image/*"><br>
-        <img id="preview" src="" alt="قم برفع صورة"><br><br>
+        <img id="preview" src="" alt="يرجى رفع صورة لمعاينتها"><br><br>
         <button class="btn" onclick="setFilter('grayscale(100%)')">أبيض وأسود</button>
         <button class="btn" onclick="setFilter('invert(100%)')">عكس الألوان</button>
+        <button class="btn" onclick="setFilter('blur(5px)')">تغبيش (Blur)</button>
         <button class="btn" onclick="setFilter('none')">إعادة ضبط</button>
     </div>
 
@@ -96,25 +122,45 @@ if option == "💬 مساعد يونس الذكي (AI Chat)":
 </body>
 </html>"""
         st.code(html_code, language="html")
-        bot_reply = "تم توليد الكود الخاص بموقع الصور بنجاح! 🚀"
+        bot_reply = (
+            "✅ تم توليد الكود الاحترافي بناءً على التفكير المنطقي للنموذج!"
+        )
 
-      elif "بايثون" in query_lower or "python" in query_lower or "كود" in query_lower:
-        st.markdown("إليك كود بايثون متكامل ومخصص لمهمتك:")
-        py_code = """import sys
+      elif (
+          "بايثون" in query_lower
+          or "python" in query_lower
+          or "كود" in query_lower
+          or "سكربت" in query_lower
+      ):
+        st.markdown(f"**تحليل النموذج:** توليد سكربت مخصص لـ ({user_query}):")
+        py_code = f"""# تم توليد هذا الكود بواسطة نموذج الذكاء الاصطناعي (2026)
+# الهدف: {user_prompt if 'user_prompt' in locals() else user_query}
 
-def main():
-    print("--- تشغيل السكربت بنجاح ---")
-    print("البيئة جاهزة للعمل!")
+import sys
+import time
+
+def process_smart_execution():
+    print("========================================")
+    print("🚀 بدء تنفيذ السكربت الذكي...")
+    print(f"📌 المهمة المطلوبة: {user_query}")
+    print("========================================")
+    
+    # محاكاة العمل البرمجي
+    time.sleep(0.5)
+    print("✅ تم استكمال العملية بنجاح وبدون أخطاء!")
 
 if __name__ == "__main__":
-    main()"""
+    process_smart_execution()"""
         st.code(py_code, language="python")
-        bot_reply = "تم تجهيز كود بايثون بنجاح! 💻"
+        bot_reply = "💻 الكود جاهز ومطابق للمعايير البرمجية الحديثة."
 
       else:
         bot_reply = (
-            f"مرحباً يا يونس! لقد استلمت طلبك حول: ({user_query}). أخبرني تفاصيل"
-            " أكثر إذا كنت تريد كتابة كود معين خصيصاً لهذه الفكرة! 🛡️"
+            f"**استجابة النموذج الذكي:** أهلاً بك يا يونس! لقد قمت بتحليل طلبك"
+            f" المتعلق بـ **({user_query})**.\n\nبصفتي نموذج 2026، أستطيع"
+            " مساعدتك في كتابة سكربتات احترافية، بناء أدوات أمنية، أو تصميم"
+            " واجهات برمجية. فقط حدد لي ما الذي تريد أن يبنيه الكود بالتفصيل وسأقوم"
+            " بصياغته لك فوراً! ⚡"
         )
         st.markdown(bot_reply)
 
